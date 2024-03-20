@@ -1,0 +1,161 @@
+activity_splash.xml
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@android:color/white">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/some_image"
+        android:scaleType="centerCrop"/>
+
+</FrameLayout>
+
+activity_main.xml
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/lastNameEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Фамилия"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+ <EditText
+    android:id="@+id/firstNameEditText"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:hint="Имя"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/lastNameEditText" />
+
+<EditText
+    android:id="@+id/middleNameEditText"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:hint="Отчество"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/firstNameEditText" />
+
+<EditText
+    android:id="@+id/ageEditText"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:hint="Возраст"
+    android:inputType="number"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/middleNameEditText" />
+
+<EditText
+    android:id="@+id/hobbyDescriptionEditText"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:hint="Описание хобби"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/ageEditText" />
+
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Далее"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/hobbyDescriptionEditText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+activity_info.xml
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/infoTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+</ScrollView>
+
+SplashActivity.kt
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import androidx.appcompat.app.AppCompatActivity
+
+class SplashActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash)
+
+        Handler().postDelayed({
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }, 3000) 
+    }
+}
+
+MainActivity.kt
+import android.content.Intent
+import android.os.Bundle
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val nextButton = findViewById<Button>(R.id.nextButton)
+        nextButton.setOnClickListener {
+            startActivity(Intent(this, InfoActivity::class.java))
+        }
+    }
+}
+
+InfoActivity.kt
+import android.os.Bundle
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class InfoActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_info)
+
+        val infoTextView = findViewById<TextView>(R.id.infoTextView)
+
+        // Получаем данные из предыдущей активности
+        val lastName = intent.getStringExtra("lastName")
+        val firstName = intent.getStringExtra("firstName")
+        val middleName = intent.getStringExtra("middleName")
+        val age = intent.getIntExtra("age", 0)
+        val hobby = intent.getStringExtra("hobby")
+
+        // Формируем информацию
+        val info = "ФИО: $lastName $firstName $middleName\nВозраст: $age\nХобби: $hobby"
+        infoTextView.text = info
+    }
+}
